@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4010929609671726}
   - component: {fileID: 23277923512279692}
   - component: {fileID: 33985031635052114}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4538391045286288}
   - component: {fileID: 198494894118059358}
   - component: {fileID: 199280918421064484}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: DashParticleEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,8 @@ GameObject:
   - component: {fileID: 114056569851104588}
   - component: {fileID: 114240812969607734}
   - component: {fileID: 114053162323922170}
-  m_Layer: 8
+  - component: {fileID: 114159880286125744}
+  m_Layer: 11
   m_Name: Player2D
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -204,11 +205,29 @@ MonoBehaviour:
   wallLeap: {x: 18, y: 17}
   wallSlideSpeedMax: 3
   wallStickTime: 0.25
+  xDirection: 0
   activateDashKey: 304
   dashDuration: 0.1
   dashDistance: 4.8
   dashCooldownTime: 0.5
   dashParticle: {fileID: 198494894118059358}
+--- !u!114 &114159880286125744
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1643897040319710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb449a94d074ac049938306f8ed501e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeBetweenAttacks: 0.4
+  attackDamage: 33
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  attackDistance: 2
 --- !u!114 &114240812969607734
 MonoBehaviour:
   m_ObjectHideFlags: 1

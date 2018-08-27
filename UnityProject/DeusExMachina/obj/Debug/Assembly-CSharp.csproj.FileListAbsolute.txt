@@ -1,0 +1,2 @@
+D:\Code\Projects\deus-ex-machina\UnityProject\DeusExMachina\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+D:\Code\Projects\deus-ex-machina\UnityProject\DeusExMachina\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache

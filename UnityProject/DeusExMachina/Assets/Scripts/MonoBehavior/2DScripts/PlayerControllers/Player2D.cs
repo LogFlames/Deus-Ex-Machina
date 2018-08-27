@@ -27,7 +27,14 @@ public class Player2D : MonoBehaviour
     private float gravity;
     private float maxJumpVelocity;
     private float minJumpVelocity;
-    public Vector3 Velocity { get; private set; }
+
+    private Vector3 velocity;
+    public Vector3 Velocity
+    {
+        get { return velocity; }
+    }
+
+    [HideInInspector] public int xDirection;
 
     private float velocityXSmoothing;
 
@@ -110,17 +117,22 @@ public class Player2D : MonoBehaviour
 
         HandleDash();
 
-        controller.Move(Velocity * Time.deltaTime, directionalInput);
+        controller.Move(velocity * Time.deltaTime, directionalInput);
+
+        if (velocity.x != 0)
+        {
+            xDirection = (velocity.x > 0 ? 1 : -1);
+        }
 
         if (controller.collisions.above || controller.collisions.below)
         {
             if (controller.collisions.slidingDownMaxSlope)
             {
-                Velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
+                velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
             }
             else
             {
-                Velocity.y = 0;
+                velocity.y = 0;
             }
         }
     }
@@ -136,18 +148,18 @@ public class Player2D : MonoBehaviour
         {
             if (wallDirX == directionalInput.x)
             {
-                Velocity.x = -wallDirX * wallJumpClimb.x;
-                Velocity.y = wallJumpClimb.y;
+                velocity.x = -wallDirX * wallJumpClimb.x;
+                velocity.y = wallJumpClimb.y;
             }
             else if (directionalInput.x == 0)
             {
-                Velocity.x = -wallDirX * wallJumpOff.x;
-                Velocity.y = wallJumpOff.y;
+                velocity.x = -wallDirX * wallJumpOff.x;
+                velocity.y = wallJumpOff.y;
             }
             else
             {
-                Velocity.x = -wallDirX * wallLeap.x;
-                Velocity.y = wallLeap.y;
+                velocity.x = -wallDirX * wallLeap.x;
+                velocity.y = wallLeap.y;
             }
         }
 
@@ -166,22 +178,22 @@ public class Player2D : MonoBehaviour
             {
                 if (directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x))
                 { // not jumping against max slope
-                    Velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
-                    Velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
+                    velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
+                    velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
                 }
             }
             else
             {
-                Velocity.y = maxJumpVelocity;
+                velocity.y = maxJumpVelocity;
             }
         }
     }
 
     public void OnJumpInputUp()
     {
-        if (Velocity.y > minJumpVelocity)
+        if (velocity.y > minJumpVelocity)
         {
-            Velocity.y = minJumpVelocity;
+            velocity.y = minJumpVelocity;
         }
     }
 
@@ -194,15 +206,15 @@ public class Player2D : MonoBehaviour
         {
             wallSliding = true;
 
-            if (Velocity.y < -wallSlideSpeedMax)
+            if (velocity.y < -wallSlideSpeedMax)
             {
-                Velocity.y = -wallSlideSpeedMax;
+                velocity.y = -wallSlideSpeedMax;
             }
 
             if (timeToWallUnstick > 0)
             {
                 velocityXSmoothing = 0;
-                Velocity.x = 0;
+                velocity.x = 0;
 
                 if (directionalInput.x != wallDirX && directionalInput.x != 0)
                 {
@@ -238,7 +250,7 @@ public class Player2D : MonoBehaviour
 
                 dashDirection = Velocity.normalized;
 
-                Velocity = dashDirection * (dashDistance / dashDuration);
+                velocity = dashDirection * (dashDistance / dashDuration);
 
                 if (dashParticle != null)
                 {
@@ -250,16 +262,16 @@ public class Player2D : MonoBehaviour
 
         if (currentlyDashing)
         {
-            Velocity = dashDirection * (dashDistance / dashDuration);
+            velocity = dashDirection * (dashDistance / dashDuration);
         }
 
         if (currentlyDashing && dashDurationCountdownTimer <= 0f)
         {
             currentlyDashing = false;
 
-            Velocity = velocityBeforeDash;
+            velocity = velocityBeforeDash;
 
-            Velocity.y = Mathf.Max(Velocity.y, 0f);
+            velocity.y = Mathf.Max(Velocity.y, 0f);
 
             if (dashParticle != null)
             {
@@ -279,7 +291,7 @@ public class Player2D : MonoBehaviour
     void CalculateVelocity()
     {
         float targetVelocityX = directionalInput.x * moveSpeed;
-        Velocity.x = Mathf.SmoothDamp(Velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
-        Velocity.y += gravity * Time.deltaTime;
+        velocity.x = Mathf.SmoothDamp(Velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
+        velocity.y += gravity * Time.deltaTime;
     }
 }

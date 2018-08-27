@@ -5,13 +5,15 @@ using UnityEngine;
 public class PlayerAttackController2D : MonoBehaviour
 {
 
-    [SerializeField] private KeyCode normalAttackKey;
-
     [SerializeField] private float timeBetweenAttacks;
 
     private float countdownBetweenAttacks;
 
     [SerializeField] private float attackDamage;
+
+    [SerializeField] private LayerMask enemyLayer;
+
+    [SerializeField] private float attackDistance;
 
     void Start()
     {
@@ -22,9 +24,22 @@ public class PlayerAttackController2D : MonoBehaviour
     {
         countdownBetweenAttacks -= Time.deltaTime;
 
-        if (Input.GetKeyDown(normalAttackKey) && countdownBetweenAttacks <= 0f)
+        if (Input.GetMouseButtonDown(0) && countdownBetweenAttacks <= 0f)
         {
             //Attack
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Player2D.instance.xDirection * Vector3.right, attackDistance, enemyLayer);
+
+            if (hit.collider != null)
+            {
+                hit.collider.GetComponent<HealthManager>().Hit(attackDamage);
+            }
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+
+        Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
 }
